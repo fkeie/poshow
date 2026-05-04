@@ -17,7 +17,7 @@ class FloatService : Service() {
     private lateinit var floatView: TextView
     private val channelId = "float_channel_01"
 
-    // ÓÃÓÚ½ÓÊÕ¸üĞÂÎÄ±¾µÄ¹ã²¥£¨Ô¤ÁôµÄAPI½Ó¿Ú£©
+    // ç”¨äºæ¥æ”¶æ›´æ–°æ–‡æœ¬çš„å¹¿æ’­ï¼ˆé¢„ç•™çš„APIæ¥å£ï¼‰
     private val updateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val newText = intent?.getStringExtra("text")
@@ -32,7 +32,7 @@ class FloatService : Service() {
         createNotificationChannel()
         startForeground(1, createNotification())
         
-        // ×¢²á¹ã²¥½ÓÊÕÆ÷£¬¼àÌı¸üĞÂÖ¸Áî
+        // æ³¨å†Œå¹¿æ’­æ¥æ”¶å™¨ï¼Œç›‘å¬æ›´æ–°æŒ‡ä»¤
         registerReceiver(updateReceiver, IntentFilter("com.float.text.UPDATE_ACTION"))
 
         setupFloatingWindow()
@@ -41,15 +41,15 @@ class FloatService : Service() {
     private fun setupFloatingWindow() {
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
 
-        // ´´½¨ÎÄ±¾ÊÓÍ¼
+        // åˆ›å»ºæ–‡æœ¬è§†å›¾
         floatView = TextView(this).apply {
-            text = "µÈ´ıÄÚÈİ..." // ³õÊ¼Õ¼Î»ÎÄ×Ö
+            text = "ç­‰å¾…å†…å®¹..." // åˆå§‹å ä½æ–‡å­—
             setTextColor(Color.WHITE)
-            textSize = 12f // Ğ¡ÇÉµÄ×ÖºÅ
+            textSize = 12f // å°å·§çš„å­—å·
             setBackgroundColor(Color.TRANSPARENT)
             setPadding(20, 10, 20, 10)
             
-            // ³¤°´¸´ÖÆ¹¦ÄÜ
+            // é•¿æŒ‰å¤åˆ¶åŠŸèƒ½
             setOnLongClickListener {
                 val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
                 val clip = ClipData.newPlainText("float_text", text)
@@ -58,7 +58,7 @@ class FloatService : Service() {
             }
         }
 
-        // ÉèÖÃĞü¸¡´°²ÎÊı
+        // è®¾ç½®æ‚¬æµ®çª—å‚æ•°
         val params = WindowManager.LayoutParams().apply {
             width = WindowManager.LayoutParams.WRAP_CONTENT
             height = WindowManager.LayoutParams.WRAP_CONTENT
@@ -70,32 +70,41 @@ class FloatService : Service() {
             flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
             format = PixelFormat.TRANSLUCENT
             gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
-            y = 60 // ¾àÀëÆÁÄ»¶¥²¿60ÏñËØ
+            y = 60 // è·ç¦»å±å¹•é¡¶éƒ¨60åƒç´ 
         }
 
         try {
             windowManager.addView(floatView, params)
         } catch (e: Exception) {
-            // È¨ÏŞ¶ªÊ§Ê±Í£Ö¹×ÔÉí
+            // æƒé™ä¸¢å¤±æ—¶åœæ­¢è‡ªèº«
             stopSelf()
         }
     }
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(channelId, "Ğü¸¡´°·şÎñÍ¨µÀ", NotificationManager.IMPORTANCE_LOW)
+            val channel = NotificationChannel(channelId, "æ‚¬æµ®çª—æœåŠ¡é€šé“", NotificationManager.IMPORTANCE_LOW)
             getSystemService(NotificationManager::class.java)?.createNotificationChannel(channel)
         }
     }
 
-    private fun createNotification(): Notification {
-        return NotificationCompat.Builder(this, channelId)
-            .setContentTitle("Ğü¸¡ÎÄ±¾·şÎñÔËĞĞÖĞ")
-            .setContentText("µã»÷·µ»ØÓ¦ÓÃ")
-            .setSmallIcon(android.R.drawable.sym_def_app_icon)
-            .setPriority(NotificationCompat.PRIORITY_LOW)
-            .build()
-    }
+private fun createNotification(): Notification {
+    // ä¿®å¤ Android 12+ å¿…é¡»è®¾ç½® PendingIntent çš„é—®é¢˜
+    val pendingIntent = PendingIntent.getActivity(
+        this,
+        0,
+        Intent(),
+        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+    )
+
+    return NotificationCompat.Builder(this, channelId)
+        .setContentTitle("æ‚¬æµ®æ–‡æœ¬æœåŠ¡è¿è¡Œä¸­")
+        .setContentText("ç‚¹å‡»è¿”å›åº”ç”¨")
+        .setSmallIcon(android.R.drawable.sym_def_app_icon)
+        .setPriority(NotificationCompat.PRIORITY_LOW)
+        .setContentIntent(pendingIntent) // å…³é”®ä¿®å¤
+        .build()
+}
 
     override fun onBind(intent: Intent?): IBinder? = null
 
