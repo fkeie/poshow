@@ -19,6 +19,7 @@ android {
             isMinifyEnabled = false
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -26,6 +27,5 @@ android {
 }
 
 dependencies {
-    // 只保留最基础的兼容性库
     implementation("androidx.appcompat:appcompat:1.6.1")
 }
