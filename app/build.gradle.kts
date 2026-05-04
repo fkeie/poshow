@@ -27,7 +27,7 @@ android {
 }
 
 dependencies {
-    // ✅ 强制使用统一 Kotlin 版本
+    // 强制使用统一 Kotlin 版本
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.8.22")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.22")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22")
