@@ -1,4 +1,11 @@
- // ÕâÊÇÏîÄ¿µÄ¶¥²ã¹¹½¨ÎÄ¼þ
+// é¡¶çº§æž„å»ºæ–‡ä»¶ï¼ˆé¡¹ç›®çº§ï¼‰
 plugins {
-    id("com.android.application") version "7.4.2" apply false
+    id("com.android.application") version "8.1.0" apply false
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
 }
