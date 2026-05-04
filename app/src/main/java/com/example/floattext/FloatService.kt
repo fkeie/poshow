@@ -88,23 +88,29 @@ class FloatService : Service() {
         }
     }
 
-private fun createNotification(): Notification {
-    // 修复 Android 12+ 必须设置 PendingIntent 的问题
-    val pendingIntent = PendingIntent.getActivity(
-        this,
-        0,
-        Intent(),
-        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-    )
+    private fun createNotification(): Notification {
+        // 修复Android 12+必须指定PendingIntent的可变性
+        val pendingIntentFlags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        } else {
+            PendingIntent.FLAG_UPDATE_CURRENT
+        }
 
-    return NotificationCompat.Builder(this, channelId)
-        .setContentTitle("悬浮文本服务运行中")
-        .setContentText("点击返回应用")
-        .setSmallIcon(android.R.drawable.sym_def_app_icon)
-        .setPriority(NotificationCompat.PRIORITY_LOW)
-        .setContentIntent(pendingIntent) // 关键修复
-        .build()
-}
+        val pendingIntent = PendingIntent.getActivity(
+            this,
+            0,
+            Intent(),
+            pendingIntentFlags
+        )
+
+        return NotificationCompat.Builder(this, channelId)
+            .setContentTitle("悬浮文本服务运行中")
+            .setContentText("点击返回应用")
+            .setSmallIcon(android.R.drawable.sym_def_app_icon)
+            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .setContentIntent(pendingIntent)
+            .build()
+    }
 
     override fun onBind(intent: Intent?): IBinder? = null
 
