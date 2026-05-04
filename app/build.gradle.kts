@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace = "com.example.floattext"
-    compileSdk = 34 // 使用较新的SDK以确保兼容性
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.floattext"
@@ -19,6 +19,7 @@ android {
             isMinifyEnabled = false
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
